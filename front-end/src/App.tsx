@@ -20,6 +20,18 @@ export function App() {
       },
     ]);
   };
+  const handleRemove = (id: string) => {
+    setList([...list.filter(item => item.id !== id)]);
+  };
+  const handleComplete = (id: string) => {
+    setList([
+      ...list.map(item => ({
+        ...item,
+        complete: item.id === id ? true : item.complete
+      }))
+    ])
+  };
+
 
   return (
     <>
@@ -33,17 +45,9 @@ export function App() {
               id={listItem.id}
               label={listItem.label}
               complete={listItem.complete}
-              onComplete={() =>
-                setList([...list.filter((item) => item.id !== listItem.id)])
-              }
-              onRemove={() =>
-                setList([
-                  ...list.map((item) => ({
-                    ...item,
-                    complete: item.id === listItem.id ? true : item.complete,
-                  })),
-                ])
-              }
+
+              onRemove={() => handleRemove(listItem.id)}
+              onComplete={() => handleComplete(listItem.id)}
             />
           ))}
         </ol>
