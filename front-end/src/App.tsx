@@ -2,6 +2,9 @@ import { useState } from "react";
 import { InputAdd } from "./components/InputAdd";
 import { TodoItem } from "./components/TodoItem";
 import { List } from "./components/List";
+import { TodoAPI } from "./shared/services/api/TodoAPI";
+
+TodoAPI.getAll().then(data => console.log('APP', data));
 
 export function App() {
   const [list, setList] = useState([
