@@ -2,25 +2,37 @@ import axios from "axios";
 
 const axiosInstance = axios.create()
 
+interface ITodo {
+  id: string;
+  label: string;
+  complete: boolean;
+}
+
+interface ITodoWithoutId {
+  label: string;
+  complete: boolean;
+}
+
 export const TodoAPI = {
    async getAll() {
     const response = await axiosInstance.get('/api/todos');
     console.log(response);
 
-    return response.data.todos;
+    return response.data.todos as ITodo[];
   },
 
-  async create(todo: { title: string; completed: boolean }) {
-    const response = await axiosInstance.post('/api/todos', todo);
-    return response.data.todo;
+  async create(data: ITodoWithoutId) {
+    const response = await axiosInstance.post('/api/todos', data);
+    return response.data.todos as ITodo;
   },
 
-  async update(id: string, todo: { title?: string; completed?: boolean }) {
-    const response = await axiosInstance.put(`/api/todos/${id}`, todo)
-    return response.data.todo
+  async updateById(id: string, data: Partial<ITodoWithoutId>) {
+    await axiosInstance.put(`/api/todos/${id}`, data);
+    return;
   },
 
-  async remove(id: string) {
+  async deleteById(id: string) {
     await axiosInstance.delete(`/api/todos/${id}`);
+    return;
   }
 };
