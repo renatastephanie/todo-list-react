@@ -8,19 +8,19 @@ createServer({
   routes() {
     this.namespace = "api";
 
-    // GET - lista todos
+    // GET - lista ToDos
     this.get("/todos", (schema) => {
       return schema.all("todos");
     });
 
-    // POST - cria novo todo
+    // POST - cria novo ToDo
     this.post("/todos/:id", (schema, request) => {
       const attrs = JSON.parse(request.requestBody);
 
       return schema.create("todos", attrs);
     });
 
-    // PUT - atualiza um todo
+    // PUT - atualiza um ToDo
     this.put("/todos/:id", (schema, request) => {
       const id = request.params.id;
 
@@ -32,7 +32,7 @@ createServer({
       return {};
     });
 
-    // DELETE - remove um todo
+    // DELETE - remove um ToDo
     this.delete("/todos/:id", (schema, request) => {
       const id = request.params.id;
 
