@@ -1,4 +1,4 @@
-import PageLayoutStyles from "./PageLayout.module.css";
+import PageLayoutStyles from "./PageLayout.module.scss";
 
 interface IPageLayoutProps { 
   children: React.ReactNode;

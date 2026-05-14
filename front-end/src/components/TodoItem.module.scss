@@ -1,0 +1,56 @@
+.Item {
+  gap: 4px;
+  padding: 8px;
+  display: flex;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background-color: antiquewhite;
+  }
+
+  &[data-complete="true"] .Text {
+    text-decoration: line-through;
+  }
+
+  .ButtonsGroup {
+    gap: 4px;
+    display: flex;
+  }
+
+  .ButtonComplete {
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 100px;
+    background-color: green;
+
+    &:hover {
+      background-color: rgb(21, 151, 21);
+    }
+
+    &:active {
+      background-color: rgb(58, 172, 58);
+    }
+  }
+
+  .ButtonRemove {
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 100px;
+    text-decoration: none;
+    background-color: red;
+
+    &:hover {
+      background-color: #ff3838;
+    }
+
+    &:active {
+      background-color: #ff4747;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import './AppLayout.css';
+import './AppLayout.scss';
 
 export const AppLayout = ({ children }: React.PropsWithChildren) => {
   return (

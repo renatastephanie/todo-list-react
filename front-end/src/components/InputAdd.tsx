@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import InputAddStyles from "./InputAdd.module.css";
+import InputAddStyles from "./InputAdd.module.scss";
 
 interface IInputAddProps {
   onAdd: (value: string) => void;

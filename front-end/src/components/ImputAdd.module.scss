@@ -1,0 +1,31 @@
+.Container {
+  gap: 16px;
+  padding: 8px;
+  display: flex;
+
+  .Input {
+    flex: 1;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid #00000025;
+  }
+
+  .Button {
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    padding: 8px 16px;
+    background: linear-gradient(90deg, #2e8b57, #3cb371);
+
+    &:hover {
+      background: linear-gradient(90deg, #34985f, #43cd81);
+    }
+
+    &:active {
+      background: linear-gradient(90deg, #3a8d5e, #4cb27a);
+    }
+  }
+}

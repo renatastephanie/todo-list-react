@@ -1,4 +1,4 @@
-import TodoItemStyles from './TodoItem.module.css';
+import TodoItemStyles from './TodoItem.module.scss';
 interface ITodoItemProps {
   id: string;
   label: string;

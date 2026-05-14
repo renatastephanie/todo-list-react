@@ -1,4 +1,4 @@
-import ListStyles from "./List.module.css";
+import ListStyles from "./List.module.scss";
 
 export const List = ({ children }: React.PropsWithChildren) => {
   return (
