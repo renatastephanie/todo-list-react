@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import InputAddStyles from "./InputAdd.module.scss";
+import styles from "./InputAdd.module.scss";
 
 interface IInputAddProps {
   onAdd: (value: string) => void;
@@ -15,10 +15,10 @@ export const InputAdd = (props: IInputAddProps) => {
   };
 
   return (
-    <div className={InputAddStyles.Container}>
-      <input className={InputAddStyles.Input} value={value} onChange={(e) => setValue(e.target.value)} />
+    <div className={styles.Container}>
+      <input className={styles.Input} value={value} onChange={(e) => setValue(e.target.value)} />
 
-      <button className={InputAddStyles.Button} onClick={handleAdd}>
+      <button className={styles.Button} onClick={handleAdd}>
         Adicionar
       </button>
     </div>

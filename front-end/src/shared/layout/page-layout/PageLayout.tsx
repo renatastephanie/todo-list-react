@@ -1,4 +1,4 @@
-import PageLayoutStyles from "./PageLayout.module.scss";
+import styles from "./PageLayout.module.scss";
 
 interface IPageLayoutProps { 
   children: React.ReactNode;
@@ -7,10 +7,10 @@ interface IPageLayoutProps {
 
 export const PageLayout = ({children, title}: IPageLayoutProps) => {
   return (
-    <div className={PageLayoutStyles.pageLayoutContainer}>
-      <div className={PageLayoutStyles.pageContent}>
+    <div className={styles.pageLayoutContainer}>
+      <div className={styles.pageContent}>
         <div>
-          <h1 className={PageLayoutStyles.pageTitle}>{title}</h1>
+          <h1 className={styles.pageTitle}>{title}</h1>
         </div>
 
         <div>{children}</div>

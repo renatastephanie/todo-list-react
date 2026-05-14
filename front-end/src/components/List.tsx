@@ -1,8 +1,8 @@
-import ListStyles from "./List.module.scss";
+import styles from "./List.module.scss";
 
 export const List = ({ children }: React.PropsWithChildren) => {
   return (
-    <ol className={ListStyles.List}>
+    <ol className={styles.List}>
       {children}
     </ol>
   );

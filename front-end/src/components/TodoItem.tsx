@@ -1,4 +1,4 @@
-import TodoItemStyles from './TodoItem.module.scss';
+import styles from './TodoItem.module.scss';
 interface ITodoItemProps {
   id: string;
   label: string;
@@ -10,20 +10,20 @@ interface ITodoItemProps {
 export const TodoItem = ({ id, label, complete, onComplete, onRemove }: ITodoItemProps) => {
 
   return (
-    <li key={id} className={TodoItemStyles.Item} data-complete={complete}>
-      <span className={TodoItemStyles.Text}>
+    <li key={id} className={styles.Item} data-complete={complete}>
+      <span className={styles.Text}>
         {label}
       </span>
 
-      <div className={TodoItemStyles.ButtonsGroup}>
+      <div className={styles.ButtonsGroup}>
         {!complete && (
-          <button onClick={onComplete} className={TodoItemStyles.ButtonComplete}>
+          <button onClick={onComplete} className={styles.ButtonComplete}>
             Concluir
           </button>
         )}
       </div>
 
-      <button onClick={onRemove} className={TodoItemStyles.ButtonRemove}>
+      <button onClick={onRemove} className={styles.ButtonRemove}>
         Remover
       </button>
     </li>
