@@ -10,7 +10,7 @@ interface ITodoItemProps {
 export const TodoItem = ({ id, label, complete, onComplete, onRemove }: ITodoItemProps) => {
 
   return (
-    <li key={id} className={styles.Item} data-complete={complete}>
+    <li key={id} className={styles.Item} data-complete={complete ? "true" : "false"}>
       <span className={styles.Text}>
         {label}
       </span>
