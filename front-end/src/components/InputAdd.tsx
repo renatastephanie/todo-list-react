@@ -10,6 +10,7 @@ export const InputAdd = (props: IInputAddProps) => {
   const [value, setValue] = useState("");
 
   const handleAdd = () => {
+    if (!value.trim()) return;
     props.onAdd(value);
     setValue("");
   };
