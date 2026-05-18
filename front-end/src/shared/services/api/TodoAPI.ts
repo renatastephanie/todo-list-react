@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3333",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3333",
 });
 
 export interface ITodo {
@@ -25,7 +25,7 @@ export const TodoAPI = {
 
   async create(data: ITodoWithoutId) {
     const response = await axiosInstance.post("/api/todos", data);
-    return response.data.todos as ITodo;
+    return response.data.todo as ITodo;
   },
 
   async updateById(id: string, data: Partial<ITodoWithoutId>) {

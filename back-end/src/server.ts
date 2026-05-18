@@ -1,62 +1,96 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import sqlite3 from "sqlite3";
 
-const db = new sqlite3.Database("todos.db");
 
-db.run(`
-  CREATE TABLE IF NOT EXISTS todos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    label TEXT NOT NULL,
-    complete INTEGER DEFAULT 0
-  )
-`);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/todos", (req, res) => {
-  db.all("SELECT * FROM todos", (err, rows) => {
+// Configuração do PostgreSQL
+const connectionString = process.env.DATABASE_URL;
+
+const pool = new Pool({
+  connectionString,
+  ssl: connectionString?.includes("localhost") || !connectionString
+    ? false
+    : { rejectUnauthorized: false },
+});
+
+// Criar tabela se não existir
+const initDb = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS todos (
+        id SERIAL PRIMARY KEY,
+        label TEXT NOT NULL,
+        complete BOOLEAN DEFAULT FALSE
+      )
+    `);
+    console.log("Banco de dados inicializado");
+  } catch (err) {
+    console.error("Erro ao inicializar banco de dados:", err);
+    process.exit(1);
+  }
+};
+
+app.get("/api/todos", async (req, res) => {
+  try {
+    const { rows } = await pool.query("SELECT * FROM todos ORDER BY id ASC");
     res.json({ todos: rows });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao buscar tarefas" });
+  }
 });
 
-app.post("/api/todos", (req, res) => {
+app.post("/api/todos", async (req, res) => {
   const { label } = req.body;
-  db.run(
-    "INSERT INTO todos (label, complete) VALUES (?, 0)",
-    [label],
-    function (err) {
-      db.get("SELECT * FROM todos WHERE id = ?", [this.lastID], (err, row) => {
-        res.json({ todo: row });
-      });
-    },
-  );
+  try {
+    const { rows } = await pool.query(
+      "INSERT INTO todos (label, complete) VALUES ($1, $2) RETURNING *",
+      [label, false]
+    );
+    res.json({ todo: rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao criar tarefa" });
+  }
 });
 
-app.put("/api/todos/:id", (req, res) => {
+app.put("/api/todos/:id", async (req, res) => {
   const { id } = req.params;
   const { complete } = req.body;
-  db.run(
-    "UPDATE todos SET complete = ? WHERE id = ?",
-    [complete ? 1 : 0, id],
-    () => {
-      db.get("SELECT * FROM todos WHERE id = ?", [id], (err, row) => {
-        res.json({ todo: row });
-      });
-    },
-  );
+  try {
+    const { rows } = await pool.query(
+      "UPDATE todos SET complete = $1 WHERE id = $2 RETURNING *",
+      [complete, Number(id)]
+    );
+    res.json({ todo: rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao atualizar tarefa" });
+  }
 });
 
-app.delete("/api/todos/:id", (req, res) => {
+app.delete("/api/todos/:id", async (req, res) => {
   const { id } = req.params;
-  db.run("DELETE FROM todos WHERE id = ?", [id], () => {
+  try {
+    await pool.query("DELETE FROM todos WHERE id = $1", [Number(id)]);
     res.json({ success: true });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao deletar tarefa" });
+  }
 });
 
-const PORT = process.env.PORT || 3333;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+const start = async () => {
+  await initDb();
+  const PORT = process.env.PORT || 3333;
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+};
+
+start();
