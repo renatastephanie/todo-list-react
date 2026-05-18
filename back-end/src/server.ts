@@ -65,6 +65,7 @@ app.delete("/api/todos/:id", (req, res) => {
   res.json({ success: true });
 });
 
-app.listen(3333, () => {
-  console.log("Servidor rodando em http://localhost:3333");
+const PORT = process.env.PORT || 3333;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
