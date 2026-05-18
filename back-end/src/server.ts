@@ -1,16 +1,10 @@
 import express from "express";
 import cors from "cors";
-import Database from "better-sqlite3";
+import sqlite3 from "sqlite3";
 
-interface ITodo {
-  id: number;
-  label: string;
-  complete: number;
-}
+const db = new sqlite3.Database("todos.db");
 
-const db = new Database("todos.db");
-
-db.exec(`
+db.run(`
   CREATE TABLE IF NOT EXISTS todos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     label TEXT NOT NULL,
@@ -19,50 +13,47 @@ db.exec(`
 `);
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// GET - lista todos
 app.get("/api/todos", (req, res) => {
-  const todos = db.prepare("SELECT * FROM todos").all();
-  res.json({ todos });
+  db.all("SELECT * FROM todos", (err, rows) => {
+    res.json({ todos: rows });
+  });
 });
 
-// POST - cria novo todo
 app.post("/api/todos", (req, res) => {
   const { label } = req.body;
-  const result = db
-    .prepare("INSERT INTO todos (label, complete) VALUES (?, 0)")
-    .run(label);
-
-  const todo = db
-    .prepare("SELECT * FROM todos WHERE id = ?")
-    .get(result.lastInsertRowid) as ITodo;
-
-  res.json({ todo });
+  db.run(
+    "INSERT INTO todos (label, complete) VALUES (?, 0)",
+    [label],
+    function (err) {
+      db.get("SELECT * FROM todos WHERE id = ?", [this.lastID], (err, row) => {
+        res.json({ todo: row });
+      });
+    },
+  );
 });
 
-// PUT - atualiza um todo
 app.put("/api/todos/:id", (req, res) => {
   const { id } = req.params;
   const { complete } = req.body;
-
-  db.prepare("UPDATE todos SET complete = ? WHERE id = ?").run(
-    complete ? 1 : 0,
-    id,
+  db.run(
+    "UPDATE todos SET complete = ? WHERE id = ?",
+    [complete ? 1 : 0, id],
+    () => {
+      db.get("SELECT * FROM todos WHERE id = ?", [id], (err, row) => {
+        res.json({ todo: row });
+      });
+    },
   );
-
-  const todo = db.prepare("SELECT * FROM todos WHERE id = ?").get(id) as ITodo;
-
-  res.json({ todo });
 });
 
-// DELETE - remove um todo
 app.delete("/api/todos/:id", (req, res) => {
   const { id } = req.params;
-  db.prepare("DELETE FROM todos WHERE id = ?").run(id);
-  res.json({ success: true });
+  db.run("DELETE FROM todos WHERE id = ?", [id], () => {
+    res.json({ success: true });
+  });
 });
 
 const PORT = process.env.PORT || 3333;
